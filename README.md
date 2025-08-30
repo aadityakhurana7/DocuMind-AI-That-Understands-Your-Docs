@@ -77,6 +77,10 @@ DocuMind/
 
 ---
 
+## How the bot answers!
+
+![User Interface of the bot with Streamlit dashboard](Images/Using_the_bot.png)
+
 🛠️ Tech Stack
 
 | Component            | Technology / Library                                |
