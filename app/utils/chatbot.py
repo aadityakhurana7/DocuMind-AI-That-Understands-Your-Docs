@@ -20,8 +20,18 @@ def get_context_retriever_chain(vectordb):
     # Load environment variables (gets api keys for the models)
     load_dotenv()
     # Initialize the model, set the retreiver and prompt for the chatbot
-    llm = ChatGoogleGenerativeAI(model="gemini-pro", temperature=0.2, convert_system_message_to_human=True)
-    retriever = vectordb.as_retriever()
+    llm = ChatGoogleGenerativeAI(
+        model="models/gemini-1.5-pro",
+        temperature=0.0,
+        convert_system_message_to_human=True,
+        google_api_version="v1",
+    )
+    if vectordb is None:
+        raise ValueError("Vector database is not available. Upload and process documents first.")
+    retriever = vectordb.as_retriever(
+        search_type="similarity_score_threshold",
+        search_kwargs={"score_threshold": 0.5, "k": 3}
+    )
     prompt = ChatPromptTemplate.from_messages([
         ("system", "You are a chatbot. You'll receive a prompt that includes a chat history and retrieved content from the vectorDB based on the user's question. Your task is to respond to the user's question using the information from the vectordb, relying as little as possible on your own knowledge. If for some reason you don't know the answer for the question, or the question cannot be answered because there's no context, ask the user for more details. Do not invent an answer. Answer the questions from this context: {context}"),
         MessagesPlaceholder(variable_name="chat_history"),
@@ -45,6 +55,11 @@ def get_response(question, chat_history, vectordb):
     - response: The generated response
     - context: The context associated with the response
     """
+    # Handle simple greetings without retrieval to avoid random responses
+    normalized_question = question.strip().lower()
+    if normalized_question in ["hi", "hello", "hey", "hola", "yo", "sup", "good morning", "good afternoon", "good evening"]:
+        return "Hello! I'm ready to help you with questions about your documents. What would you like to know?", []
+    
     chain = get_context_retriever_chain(vectordb)
     response = chain.invoke({"input": question, "chat_history": chat_history})
     return response["answer"], response["context"]

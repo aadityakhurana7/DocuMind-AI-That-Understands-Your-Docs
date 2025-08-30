@@ -2,6 +2,7 @@ from langchain_community.document_loaders import PyPDFLoader
 from langchain.text_splitter import RecursiveCharacterTextSplitter
 from langchain_google_genai import GoogleGenerativeAIEmbeddings
 from langchain_community.vectorstores import Chroma
+from chromadb.config import Settings
 from dotenv import load_dotenv
 import os
 
@@ -49,15 +50,29 @@ def get_vectorstore(pdfs, from_session_state=False):
     - vectordb or None: The created or retrieved vectorstore. Returns None if loading from session state and the database does not exist
     """
     load_dotenv()
-    embedding = GoogleGenerativeAIEmbeddings(model="models/embedding-001")
+    embedding = GoogleGenerativeAIEmbeddings(
+        model="models/text-embedding-004",
+        google_api_version="v1",
+    )
+    # Use a single, consistent persistent settings object to avoid Chroma "different settings" conflicts
+    client_settings = Settings(persist_directory="Vector_DB - Documents")
     if from_session_state and os.path.exists("Vector_DB - Documents"):
         # Retrieve vectorstore from existing one
-        vectordb = Chroma(persist_directory="Vector_DB - Documents", embedding_function=embedding)
+        vectordb = Chroma(
+            persist_directory="Vector_DB - Documents",
+            embedding_function=embedding,
+            client_settings=client_settings,
+        )
         return vectordb
     elif not from_session_state:
         docs = extract_pdf_text(pdfs)
         chunks = get_text_chunks(docs)
         # Create vectorstore from chunks and saves it to the folder Vector_DB - Documents
-        vectordb = Chroma.from_documents(documents=chunks, embedding=embedding, persist_directory="Vector_DB - Documents")
+        vectordb = Chroma.from_documents(
+            documents=chunks,
+            embedding=embedding,
+            persist_directory="Vector_DB - Documents",
+            client_settings=client_settings,
+        )
         return vectordb
     return None
