@@ -37,6 +37,8 @@ With DocuMind, you can:
 
 ![User Interface of the bot with Streamlit dashboard](Images/User_Interface.png)
 
+---
+
 ## 🏗️ Project Structure
 
 ```text
@@ -49,7 +51,7 @@ DocuMind/
 ├─ requirements.txt       # Project dependencies
 └─ .env                   # API keys
 ```
-⸻
+---
 
 ## 🧩 How DocuMind Works
 
@@ -80,6 +82,8 @@ DocuMind/
 ## How the bot answers!
 
 ![User Interface of the bot with Streamlit dashboard](Images/Using_the_bot.png)
+
+---
 
 🛠️ Tech Stack
 
@@ -112,3 +116,5 @@ GOOGLE_API_KEY = "your_google_api_key_here"
 
 # 4️⃣ Run the app
 streamlit run app.py
+
+---
