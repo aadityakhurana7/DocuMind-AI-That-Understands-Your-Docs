@@ -99,9 +99,8 @@ cd <your-repo-folder>
 # 2️⃣ Install dependencies
 pip install -r requirements.txt
 
-# 3️⃣ Add your Google API key to .env
-# Example:
-# GOOGLE_API_KEY=your_api_key_here
+# 3️⃣ Create a .env file and add your api key
+GOOGLE_API_KEY = "your_google_api_key_here"
 
 # 4️⃣ Run the app
 streamlit run app.py
