@@ -33,6 +33,10 @@ With DocuMind, you can:
 
 ---
 
+## User Interface
+
+![User Interface of the bot with Streamlit dashboard](Images/User_Interface.png)
+
 ## 🏗️ Project Structure
 
 ```text
